@@ -49,8 +49,9 @@ describe("Donations", function () {
   it("Should be possible view donate per address", async function () {
     await donations.connect(acc1).donate({value: my_value})
     await donations.connect(acc1).donate({value: my_value})
-    values = await donations.donate_per_addess(acc1.address)
+    await donations.connect(acc2).donate({value: my_value})
+    value = await donations.donate_per_addess(acc1.address)
 
-    expect(values.toString()).to.equal(my_value.toString() + ',' + my_value.toString())
+    expect(value).to.equal(my_value * 2)
   })
 });

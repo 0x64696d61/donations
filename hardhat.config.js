@@ -1,10 +1,12 @@
 require("@nomiclabs/hardhat-waffle");
+require('solidity-coverage');
 require("dotenv").config();
 require("./tasks/donations.js");
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
+
 module.exports = {
   solidity: "0.8.4",
   networks: {

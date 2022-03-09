@@ -46,11 +46,12 @@ describe("Donations", function () {
 
   it("Should be no possible transfer less then one wei", async function () {
     try {
-          await donations.connect(acc1).donate({value: 0})
-        }
-          catch (error) {
-            expect(error.message).eq("VM Exception while processing transaction: reverted with reason string 'Donation should be more'");
-        }
+      await donations.connect(acc1).donate({value: 0})
+      expect(true, 'nooo why true??').to.be.false;
+    } catch (e) {
+
+      expect(e.message).include('Donation should be more');
+    }
   })
 
   it("Should be possible view all donators", async function () {

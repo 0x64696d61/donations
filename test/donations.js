@@ -35,8 +35,22 @@ describe("Donations", function () {
 
   it("Should be possible transfer funds for owner only", async function () {
     await donations.connect(acc1).donate({value: my_value})
+    const balance_before = await acc1.getBalance()
+    try {
+      const tx = await donations.connect(acc2).transfer_for_owner(acc1.address, 1)
+    } catch (e) {}
+    const balance_after = await acc1.getBalance()
 
-    expect(donations.connect(acc2).transfer_for_owner(acc1.address, 1)).revertedWith('Only owner can do it...');
+    expect(balance_before).eq(balance_after)
+  })
+
+  it("Should be no possible transfer less then one wei", async function () {
+    try {
+          await donations.connect(acc1).donate({value: 0})
+        }
+          catch (error) {
+            expect(error.message).eq("VM Exception while processing transaction: reverted with reason string 'Donation should be more'");
+        }
   })
 
   it("Should be possible view all donators", async function () {
@@ -54,4 +68,6 @@ describe("Donations", function () {
 
     expect(value).to.equal(my_value * 2)
   })
+
+
 });

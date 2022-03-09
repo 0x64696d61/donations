@@ -16,8 +16,8 @@ contract Donations {
 	}
 
 	function donate() public payable {
-		require(msg.value > 0, "WTF?");
-
+    require(msg.value > 0, "Donation should be more");
+    
 		if (donators[msg.sender].value == 0)
 			all_addresses.push(msg.sender);
 		donators[msg.sender].value += msg.value;
@@ -26,8 +26,7 @@ contract Donations {
 	function transfer_for_owner(address payable _addr, uint256 _value) external payable {
 		require(msg.sender == owner, "Only owner can do it...");
 
-		(bool success, ) = _addr.call{value:_value}("");
-		require(success, "Transfer failed.");
+    _addr.transfer(_value);
 	}
 
 	function all_donators() public view returns (address[] memory) {

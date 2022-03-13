@@ -21,14 +21,15 @@ describe("Donations", function () {
     it("Should be possible to donate funds", async function () {
         const tx = await donations.connect(acc1).donate({value: my_value})
 
-        expect(() => tx).to.changeEtherBalances([acc1, donations], [-my_value, my_value])
+        await expect(() => tx).to.changeEtherBalances([acc1, donations], [-my_value, my_value])
     })
 
     it("Should be possible transfer funds to any address", async function () {
         await donations.connect(acc1).donate({value: my_value})
-        const tx2 = await donations.connect(acc1).transfer_for_owner(acc2.address, 1)
+        const tx2 = await donations.connect(acc1).transfer_for_owner(acc2.address, my_value)
 
-        expect(() => tx2).to.changeEtherBalances([donations, acc2], [-my_value, my_value])
+
+        await expect(() => tx2).to.changeEtherBalances([donations, acc2], [-my_value, my_value])
     })
 
     it("Should be possible transfer funds for owner only", async function () {
@@ -40,7 +41,7 @@ describe("Donations", function () {
         }
         const balance_after = await acc1.getBalance()
 
-        expect(balance_before).eq(balance_after)
+        await expect(balance_before).eq(balance_after)
     })
 
     it("Should be no possible transfer less then one wei", async function () {
@@ -57,7 +58,7 @@ describe("Donations", function () {
         await donations.connect(acc1).donate({value: my_value})
         await donations.connect(acc2).donate({value: my_value})
 
-        expect(await donations.all_donators()).have.members([acc1.address, acc2.address])
+        await expect(await donations.all_donators()).have.members([acc1.address, acc2.address])
     })
 
     it("Should be possible view donate per address", async function () {
@@ -66,6 +67,6 @@ describe("Donations", function () {
         await donations.connect(acc2).donate({value: my_value})
         const value = await donations.donate_per_address(acc1.address)
 
-        expect(value).to.equal(my_value * 2)
+        await expect(value).to.equal(my_value * 2)
     })
 });
